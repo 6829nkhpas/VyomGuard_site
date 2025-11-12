@@ -3,6 +3,24 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Shield, Box, Satellite } from 'lucide-react';
 export default function VyomGarudLanding() {
+      {/* Highlights Section */}
+      <section className="px-4 py-16" id="highlights">
+        <h2 className="text-2xl md:text-4xl font-bold mb-8 text-center text-accent">The Edge</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="bg-gray-900 rounded-xl p-6 shadow-lg flex flex-col items-center">
+            <span className="text-3xl font-bold text-accent mb-2">99.99%</span>
+            <p className="text-gray-300 text-center">Mission Success Rate: Field-proven reliability metrics.</p>
+          </div>
+          <div className="bg-gray-900 rounded-xl p-6 shadow-lg flex flex-col items-center">
+            <span className="text-3xl font-bold text-accent mb-2">T-L3</span>
+            <p className="text-gray-300 text-center">Certified Hardware: Meeting the highest industry durability standards.</p>
+          </div>
+          <div className="bg-gray-900 rounded-xl p-6 shadow-lg flex flex-col items-center">
+            <span className="text-3xl font-bold text-accent mb-2">Edge AI</span>
+            <p className="text-gray-300 text-center">Real-Time Edge AI: Processing critical data onboard, minimizing latency.</p>
+          </div>
+        </div>
+      </section>
   return (
     <div className="bg-gray-900 min-h-screen text-white font-inter">
       {/* Hero Section */}
