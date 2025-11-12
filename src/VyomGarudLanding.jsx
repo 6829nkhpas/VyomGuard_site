@@ -3,6 +3,26 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Shield, Box, Satellite } from 'lucide-react';
 export default function VyomGarudLanding() {
+      {/* Contact / Footer Section */}
+      <section className="px-4 py-16 bg-gray-950" id="contact">
+        <div className="max-w-xl mx-auto text-center mb-8">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4 text-accent">Ready for Mission Briefing?</h2>
+        </div>
+        <form className="max-w-xl mx-auto bg-gray-900 rounded-xl p-8 shadow-lg flex flex-col gap-4">
+          <input type="text" name="name" placeholder="Name" className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" required />
+          <input type="email" name="email" placeholder="Email" className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" required />
+          <textarea name="message" placeholder="Message" rows="4" className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" required></textarea>
+          <button type="submit" className="px-8 py-3 rounded-lg bg-accent text-white font-semibold shadow-lg hover:scale-105 hover:-translate-y-1 transition-transform duration-200">Submit</button>
+        </form>
+        <footer className="mt-16 text-center text-gray-400">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-2">
+            <a href="#legal" className="hover:underline">Legal</a>
+            <a href="#privacy" className="hover:underline">Privacy</a>
+            <a href="#careers" className="hover:underline">Careers</a>
+          </div>
+          <div className="text-xs">&copy; {new Date().getFullYear()} VyomGarud UAV Systems. All rights reserved.</div>
+        </footer>
+      </section>
       {/* Highlights Section */}
       <section className="px-4 py-16" id="highlights">
         <h2 className="text-2xl md:text-4xl font-bold mb-8 text-center text-accent">The Edge</h2>
