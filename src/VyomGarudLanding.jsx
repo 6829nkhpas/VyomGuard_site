@@ -23,6 +23,13 @@ export default function VyomGarudLanding() {
         </div>
       </section>
       {/* ...existing code... */}
+      {/* About Section */}
+      <section className="max-w-3xl mx-auto px-4 py-16 text-center" id="about">
+        <h2 className="text-2xl md:text-4xl font-bold mb-4 text-accent">Forging the Future of Flight</h2>
+        <p className="text-base md:text-lg text-gray-300 font-medium">
+          VyomGarud is dedicated to developing and deploying mission-critical UAV systems. Our platforms are built on a foundation of proprietary advanced AI and robust, military-spec hardware, ensuring operational success in the most demanding environments globally. We don't just fly; we execute with absolute precision.
+        </p>
+      </section>
     </div>
   );
 }
