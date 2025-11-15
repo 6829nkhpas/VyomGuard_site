@@ -2,11 +2,109 @@
 // Main landing page component. All sections will be implemented here.
 import React, { useState, useEffect } from 'react';
 import { Brain, Shield, Box, Satellite } from 'lucide-react';
+
 export default function VyomGarudLanding() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [visibleSections, setVisibleSections] = useState(new Set(['hero']));
+
+  // Intersection Observer for scroll-based animations
+  useEffect(() => {
+    let observer;
+    let sections = [];
+
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.target.id) {
+            setVisibleSections(prev => new Set([...prev, entry.target.id]));
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections with IDs
+      sections = Array.from(document.querySelectorAll('section[id]'));
+      sections.forEach(section => {
+        if (section.id) {
+          observer.observe(section);
+        }
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      if (observer && sections.length > 0) {
+        sections.forEach(section => {
+          if (section.id && observer) {
+            observer.unobserve(section);
+          }
+        });
+      }
+    };
+  }, []);
+
+  // Handle smooth scrolling for anchor links
+  useEffect(() => {
+    const handleSmoothScroll = (e) => {
+      const href = e.target.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', handleSmoothScroll);
+    });
+
+    return () => {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.removeEventListener('click', handleSmoothScroll);
+      });
+    };
+  }, []);
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Here you would typically send the data to a backend API
+    console.log('Form submitted:', formData);
+    setFormSubmitted(true);
+    setFormData({ name: '', email: '', message: '' });
+    
+    // Reset submission message after 5 seconds
+    setTimeout(() => {
+      setFormSubmitted(false);
+    }, 5000);
+  };
+
   return (
     <div className="bg-gray-900 min-h-screen text-white font-inter">
       {/* Hero Section */}
-      <section className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-16 text-center overflow-hidden opacity-0 animate-fadeIn">
+      <section id="hero" className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 py-16 text-center overflow-hidden opacity-0 animate-fadeIn">
         {/* Geometric pattern overlay */}
         <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
           <svg className="w-full h-full opacity-10" viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,14 +121,14 @@ export default function VyomGarudLanding() {
         </div>
       </section>
       {/* About Section */}
-      <section className="max-w-3xl mx-auto px-4 py-16 text-center opacity-0 animate-fadeIn delay-100" id="about">
+      <section className={`max-w-3xl mx-auto px-4 py-16 text-center transition-opacity duration-1000 ${visibleSections.has('about') ? 'opacity-100' : 'opacity-0'}`} id="about">
         <h2 className="text-2xl md:text-4xl font-bold mb-4 text-accent">Forging the Future of Flight</h2>
         <p className="text-base md:text-lg text-gray-300 font-medium">
           VyomGarud is dedicated to developing and deploying mission-critical UAV systems. Our platforms are built on a foundation of proprietary advanced AI and robust, military-spec hardware, ensuring operational success in the most demanding environments globally. We don't just fly; we execute with absolute precision.
         </p>
       </section>
       {/* Capabilities Section */}
-      <section className="px-4 py-16 bg-gray-950 opacity-0 animate-fadeIn delay-200" id="capabilities">
+      <section className={`px-4 py-16 bg-gray-950 transition-opacity duration-1000 ${visibleSections.has('capabilities') ? 'opacity-100' : 'opacity-0'}`} id="capabilities">
         <h2 className="text-2xl md:text-4xl font-bold mb-8 text-center text-accent">The Arsenal</h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {/* Advanced Autonomy */}
@@ -60,7 +158,7 @@ export default function VyomGarudLanding() {
         </div>
       </section>
       {/* Highlights Section */}
-      <section className="px-4 py-16 opacity-0 animate-fadeIn delay-300" id="highlights">
+      <section className={`px-4 py-16 transition-opacity duration-1000 ${visibleSections.has('highlights') ? 'opacity-100' : 'opacity-0'}`} id="highlights">
         <h2 className="text-2xl md:text-4xl font-bold mb-8 text-center text-accent">The Edge</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="bg-gray-900 rounded-xl p-6 shadow-lg flex flex-col items-center hover:scale-105 hover:-translate-y-1 transition-transform duration-200">
@@ -78,15 +176,49 @@ export default function VyomGarudLanding() {
         </div>
       </section>
       {/* Contact / Footer Section */}
-      <section className="px-4 py-16 bg-gray-950 opacity-0 animate-fadeIn delay-400" id="contact">
+      <section className={`px-4 py-16 bg-gray-950 transition-opacity duration-1000 ${visibleSections.has('contact') ? 'opacity-100' : 'opacity-0'}`} id="contact">
         <div className="max-w-xl mx-auto text-center mb-8">
           <h2 className="text-2xl md:text-4xl font-bold mb-4 text-accent">Ready for Mission Briefing?</h2>
         </div>
-        <form className="max-w-xl mx-auto bg-gray-900 rounded-xl p-8 shadow-lg flex flex-col gap-4">
-          <input type="text" name="name" placeholder="Name" className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" required />
-          <input type="email" name="email" placeholder="Email" className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" required />
-          <textarea name="message" placeholder="Message" rows="4" className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" required></textarea>
-          <button type="submit" className="px-8 py-3 rounded-lg bg-accent text-white font-semibold shadow-lg hover:scale-105 hover:-translate-y-1 transition-transform duration-200">Submit</button>
+        <form onSubmit={handleSubmit} className="max-w-xl mx-auto bg-gray-900 rounded-xl p-8 shadow-lg flex flex-col gap-4">
+          {formSubmitted && (
+            <div className="px-4 py-3 rounded-lg bg-green-600 text-white text-center font-medium">
+              Message sent successfully! We'll get back to you soon.
+            </div>
+          )}
+          <input 
+            type="text" 
+            name="name" 
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="Name" 
+            className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" 
+            required 
+          />
+          <input 
+            type="email" 
+            name="email" 
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder="Email" 
+            className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" 
+            required 
+          />
+          <textarea 
+            name="message" 
+            value={formData.message}
+            onChange={handleInputChange}
+            placeholder="Message" 
+            rows="4" 
+            className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700 focus:border-accent focus:outline-none" 
+            required
+          ></textarea>
+          <button 
+            type="submit" 
+            className="px-8 py-3 rounded-lg bg-accent text-white font-semibold shadow-lg hover:scale-105 hover:-translate-y-1 transition-transform duration-200"
+          >
+            Submit
+          </button>
         </form>
         <footer className="mt-16 text-center text-gray-400">
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-2">
